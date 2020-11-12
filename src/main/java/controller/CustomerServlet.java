@@ -4,6 +4,8 @@ import model.Customer;
 import model.Product;
 import service.customer.CustomerServiceIPL;
 import service.customer.MyCustomerService;
+import service.product.MyProductManagement;
+import service.product.ProductManagementIPL;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,6 +21,7 @@ import java.util.List;
 @WebServlet(name = "CustomerServlet", urlPatterns = "/customer")
 public class CustomerServlet extends HttpServlet {
     MyCustomerService customerService = new CustomerServiceIPL();
+    MyProductManagement productManagement = new ProductManagementIPL();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -35,6 +38,9 @@ public class CustomerServlet extends HttpServlet {
                 break;
             case "delete":
                 deleteCustomer(request,response);
+                break;
+            case "profile":
+                updateCustomer(request,response);
                 break;
             case "listCustomer":
                 showAllCustomer(request,response);
@@ -53,12 +59,20 @@ public class CustomerServlet extends HttpServlet {
                 case "signUp":
                     showCreateForm(request, response);
                     break;
+                case "profile":
+                    showProfile(request, response);
+                    break;
+                case "details":
+                    showDetails(request, response);
+                    break;
+
                 case "listCustomer":
                     showAllCustomer(request,response);
                     break;
-
             }
     }
+
+
 
     private void showAllCustomer(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -135,4 +149,44 @@ public class CustomerServlet extends HttpServlet {
         }
     }
 
+    private void showProfile(HttpServletRequest request, HttpServletResponse response) {
+        Customer customer = (Customer) request.getSession().getAttribute("customer");
+        request.setAttribute("customer",customer);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("customer/profile.jsp");
+
+        try {
+            dispatcher.forward(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void updateCustomer(HttpServletRequest request, HttpServletResponse response){
+        int id = Integer.parseInt(request.getParameter("id"));
+        String name = request.getParameter("name");
+        String pass = request.getParameter("pass");
+        String address = request.getParameter("address");
+        String phone = request.getParameter("phone");
+        Customer customer = new Customer(id, name, pass,address, phone);
+        this.customerService.update(customer);
+        try {
+            response.sendRedirect("/home?action=customer");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void showDetails(HttpServletRequest request, HttpServletResponse response) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Product product = productManagement.findById(id);
+        request.setAttribute("product",product);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("customer/details.jsp");
+        try {
+            dispatcher.forward(request,response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

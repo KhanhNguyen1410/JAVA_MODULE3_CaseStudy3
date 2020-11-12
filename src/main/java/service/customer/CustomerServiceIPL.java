@@ -13,7 +13,7 @@ public class CustomerServiceIPL implements MyCustomerService {
     private String jdbcUsername="root";
     private String jdbcPassword = "MySQL1410";
     private static String INSERT_INTO_CUSTOMER = "{call createCustomer(?,?,?,?)}";
-    private static String UPDATE_CUSTOMER = "{call createCustomer(?,?,?,?,?)}";
+    private static String UPDATE_CUSTOMER = "{call updateCustomer(?,?,?,?,?)}";
     private static String FIND_CUSTOMER_BY_ID = "{call findCustomerByID(?)}";
     private static String FIND_ALL_CUSTOMER = "{call findAllCustomer()}";
     private static String CHECK_CUSTOMER = "{call checkUser(?,?)}";

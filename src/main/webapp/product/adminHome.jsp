@@ -220,8 +220,8 @@
                                                     <div class="container">
                                                         <h2>ARE YOU SURE?</h2>
                                                         <form method="post" action="/home?action=delete">
-                                                            label>ID:</label>
-                                                            <input type="text" class="form-control" name="id" value="${product.id}">
+                                                            <label>ID:</label>
+                                                            <input type="hidden" class="form-control" name="id" value="${product.id}">
                                                             <label>Name</label>
                                                             <input type="text" class="form-control" name="name" value="${product.name}">
                                                             <label>Price</label>

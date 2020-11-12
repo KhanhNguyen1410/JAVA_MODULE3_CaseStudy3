@@ -62,21 +62,9 @@
     <div class="container">
         <p style="margin-top: 50px">SẢN PHẨM <i style="color: red">Xuka's shop</i></p>
         <c:set var="customer" scope="session" value="${sessionScope.customer}"/>
-<%--        <c:set var="bill" scope="session" value="${sessionScope.bill}"/>--%>
         <c:out value="Have a good day ${customer.getName()}"/>
-<%--        <c:out value="Have a good day ${bill.getId}"/>--%>
-<%--        <span>Have a good day :<strong><${customer.getName()}></strong></span>--%>
-<%--        <p>--%>
-<%--&lt;%&ndash;            <c:if test='${session.getAttribute("customer") != null}'>&ndash;%&gt;--%>
-<%--                    <c:out value = 'Have a good day ${session.getAttribute("customer").getName()}'/>--%>
-<%--            <span>Have a good day :<strong><${session.getAttribute("customer")}></strong></span>--%>
-<%--&lt;%&ndash;            </c:if>&ndash;%&gt;--%>
-<%--            <%--%>
-<%--				if(session.getAttribute("customer") != null){--%>
-<%--			%>--%>
-<%--        <p>Have a good day <strong><%=session.getAttribute("customer") %></strong></p>--%>
-<%--        <%} %>--%>
-<%--        </p>--%>
+        <br>
+        <a href="/customer?action=profile" class="btn btn-success">Tài khoản</a>
         <hr>
         <div class="row">
             <c:forEach var="product" items='${requestScope["product"]}'>
@@ -92,6 +80,7 @@
                             <p>Xuất xứ: <c:out value="${product.origin.country}"/></p>
                             <p>Mô tả: <c:out value="${product.desc}"/></p>
                             <div class="row">
+                                <a href="/customer?action=details&id=${product.id}" class="btn btn-outline-secondary">Details</a>
                                 <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#exampleModalUpdate${product.id}">Thêm vào giỏ</button>
                                 <div class="modal fade" id="exampleModalUpdate${product.id}" tabindex="-1" role="dialog"
                                      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

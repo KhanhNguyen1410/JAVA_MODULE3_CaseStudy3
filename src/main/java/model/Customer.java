@@ -9,6 +9,13 @@ public class Customer {
 
     public Customer() {
     }
+    public Customer(String name, String pass, String address, String phone) {
+
+        this.name = name;
+        this.pass = pass;
+        this.address = address;
+        this.phone = phone;
+    }
 
     public Customer(int id, String name, String pass, String address, String phone) {
         this.id = id;

@@ -33,12 +33,17 @@
             <a class="nav-link" href="#"><h1 style="font-family: monospace"><img src="image/logoXu.jpg" alt="Xuka's Shop"></h1></a>
         </li>
     </ul>
+    <p>
+        <c:if test='${requestScope["message"] != null}'>
+
+            <span class="message">${requestScope["message"]}</span>
+        </c:if>
+    </p>
     <button type="button" class="btn btn-outline-secondary" style="margin-right: 30px" data-toggle="modal"
             data-target="#exampleModal">
         Login
     </button>
 
-    <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">

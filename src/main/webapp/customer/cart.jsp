@@ -36,15 +36,23 @@
             <th>Product</th>
             <th>Price</th>
             <th>Quantity</th>
+            <th>Amount</th>
         </tr>
         <c:forEach items='${requestScope["orders"]}' var="order">
             <tr>
                 <td>${order.getProduct().getName()}</td>
                 <td>${order.getProduct().getPrice()}</td>
                 <td>${order.getQuantity()}</td>
+                <td>${order.getQuantity()*order.getProduct().getPrice()}</td>
             </tr>
         </c:forEach>
+        <tr><td>Tong</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
     </table>
+
     <input type="submit" value="thanh toán" class="btn btn-success">
 </form>
 </body>
