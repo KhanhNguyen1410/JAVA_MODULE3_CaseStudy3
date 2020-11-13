@@ -1,7 +1,10 @@
 package controller;
 
+import model.Comment;
 import model.Customer;
 import model.Product;
+import service.comment.CommentServiceIPL;
+import service.comment.MyCommentService;
 import service.customer.CustomerServiceIPL;
 import service.customer.MyCustomerService;
 import service.product.MyProductManagement;
@@ -22,6 +25,7 @@ import java.util.List;
 public class CustomerServlet extends HttpServlet {
     MyCustomerService customerService = new CustomerServiceIPL();
     MyProductManagement productManagement = new ProductManagementIPL();
+    MyCommentService commentService = new CommentServiceIPL();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -37,10 +41,19 @@ public class CustomerServlet extends HttpServlet {
                 }
                 break;
             case "delete":
-                deleteCustomer(request,response);
+                disableCustomer(request,response);
+                break;
+            case "able":
+                ableCustomer(request,response);
                 break;
             case "profile":
                 updateCustomer(request,response);
+                break;
+            case "forgotPass":
+                getPass(request,response);
+                break;
+            case "comment":
+                createComment(request,response);
                 break;
             case "listCustomer":
                 showAllCustomer(request,response);
@@ -64,6 +77,9 @@ public class CustomerServlet extends HttpServlet {
                     break;
                 case "details":
                     showDetails(request, response);
+                    break;
+                case "forgotPass":
+                    showForgotPass(request, response);
                     break;
 
                 case "listCustomer":
@@ -94,10 +110,23 @@ public class CustomerServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
-    private void deleteCustomer(HttpServletRequest request, HttpServletResponse response) {
+    private void disableCustomer(HttpServletRequest request, HttpServletResponse response) {
         int id = Integer.parseInt(request.getParameter("id"));
         RequestDispatcher dispatcher;
-        customerService.delete(id);
+        customerService.disableCustomer(id);
+        dispatcher = request.getRequestDispatcher("/customer?action=listCustomer");
+        try {
+            dispatcher.forward(request,response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void ableCustomer(HttpServletRequest request, HttpServletResponse response) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        RequestDispatcher dispatcher;
+        customerService.ableCustomer(id);
         dispatcher = request.getRequestDispatcher("/customer?action=listCustomer");
         try {
             dispatcher.forward(request,response);
@@ -125,7 +154,8 @@ public class CustomerServlet extends HttpServlet {
         String pass2 = request.getParameter("pass2");
         String address = request.getParameter("address");
         String phone = request.getParameter("phone");
-        boolean isValid = customerService.checkCustomerName(name);
+        int status = 1;
+        boolean isValid = customerService.checkCustomerName(name,status);
         RequestDispatcher dispatcher = request.getRequestDispatcher("customer/signUpCustomer.jsp");
         if (pass.equals(pass2)){
             Customer customer = new Customer(id,name,pass,address,phone);
@@ -179,8 +209,63 @@ public class CustomerServlet extends HttpServlet {
     private void showDetails(HttpServletRequest request, HttpServletResponse response) {
         int id = Integer.parseInt(request.getParameter("id"));
         Product product = productManagement.findById(id);
+        List<Comment> comments = commentService.findAll(id);
+//        System.out.println(comments.get(1).getContent());
         request.setAttribute("product",product);
+        request.setAttribute("comments",comments);
         RequestDispatcher dispatcher = request.getRequestDispatcher("customer/details.jsp");
+        try {
+            dispatcher.forward(request,response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createComment(HttpServletRequest request, HttpServletResponse response) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String content = request.getParameter("comment");
+        int customer_id = Integer.parseInt(request.getParameter("customer_id"));
+        int product_id = Integer.parseInt(request.getParameter("product_id"));
+        Customer customer = customerService.findById(customer_id);
+        Product product = productManagement.findById(product_id);
+        Comment comment = new Comment(id,content,customer,product);
+        commentService.create(comment);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("customer/details.jsp");
+        try {
+            dispatcher.forward(request,response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    private void showForgotPass(HttpServletRequest request, HttpServletResponse response) {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("customer/forgotPage.jsp");
+        try {
+            dispatcher.forward(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void getPass(HttpServletRequest request, HttpServletResponse response) {
+        String name = request.getParameter("name");
+        String phone = request.getParameter("phone");
+        Customer customer = customerService.forgotPass(name,phone);
+        boolean idValid = customerService.checkAccountCustomer(name,phone);
+        RequestDispatcher dispatcher;
+//        request.setAttribute("customer",customer);
+        if (idValid){
+            request.setAttribute("message",customer.getPass());
+        }
+        else {
+            request.setAttribute("message","Incorrect information");
+        }
+        dispatcher = request.getRequestDispatcher("customer/forgotPage.jsp");
         try {
             dispatcher.forward(request,response);
         } catch (ServletException e) {

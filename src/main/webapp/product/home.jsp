@@ -30,7 +30,7 @@
             <i class="fad fa-rocket-launch"></i>
         </li>
         <li class="nav-item active">
-            <a class="nav-link" href="#"><h1 style="font-family: monospace"><img src="image/logoXu.jpg" alt="Xuka's Shop"></h1></a>
+            <a class="nav-link" href="/home"><h1 style="font-family: monospace"><img src="image/logoXu.jpg" alt="Xuka's Shop"></h1></a>
         </li>
     </ul>
     <p>
@@ -66,11 +66,10 @@
                             <a href="/customer?action=signUp" class="btn btn-success">Sign Up</a>
 <%--                            <button type="submit" name="action" value="signUp" class="btn btn-secondary" data-dismiss="modal">Sign Up</button>--%>
                         </div>
-
+                        <a href="/customer?action=forgotPass">Quên mật khẩu?</a>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>
@@ -134,12 +133,10 @@
                                                                 <a href="/customer?action=signUp" class="btn btn-success">Sign Up</a>
 <%--                                                                <button type="submit" name="action" value="signUp" class="btn btn-secondary" data-dismiss="modal">Sign Up</button>--%>
                                                             </div>
+                                                            <a href="/customer?action=forgotPass">Quên mật khẩu?</a>
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                                                         </form>
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -154,11 +151,14 @@
         </div>
     </div>
 </div>
-<footer>
+<footer style="background-color: burlywood">
     <hr>
     <div class="footer-copyright text-center py-3">© 2020 Copyright:
         <a href="#">khanh Nobi</a>
         HOTLINE:<a href="$">0345541750</a>
+        <a href="https://www.facebook.com/kodoi.love/"><img src="image/face.jpg" style="height: 50px ; width: 50px" alt=""></a>
+        <a href="https://www.youtube.com/"><img src="image/youtube.jpg" style="height: 50px ; width: 50px" alt=""></a>
+        <a href="https://codegym.vn/"><img src="image/codegym.jpg" style="height: 50px ; width: 50px" alt=""></a>
     </div>
 </footer>
 </body>

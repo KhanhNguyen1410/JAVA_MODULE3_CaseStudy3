@@ -70,6 +70,7 @@
 <%--        <c:set var="customer" scope="session" value="${sessionScope.customer}"/>--%>
 <%--        <span>Have a good day :<strong><${customer.getName()}></strong></span>--%>
 <%--        <c:out value="Have a good day <strong>${customer.getName()}</strong>"/>--%>
+        <a href="/bill?action=listBill" class="btn btn-warning">Danh sách bill</a>
         <a href="/customer?action=listCustomer" style="float: right"  class="btn btn-primary">Danh sách khách hàng</a>
         <button style="background-color: red; float: left" type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#exampleModal">Thêm mới</button>
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
@@ -80,8 +81,8 @@
                         <div class="container">
                             <h2>Thêm sản phẩm</h2>
                             <form action="/home?action=create"  method="post">
-                                <label>ID:</label>
-                                <input type="text" class="form-control" name="id" value="1">
+
+                                <input type="hidden" class="form-control" name="id" value="1">
                                 <label>Name</label>
                                 <input type="text" class="form-control" name="name">
                                 <label>Price</label>
@@ -155,8 +156,8 @@
                                                     <div class="container">
                                                         <h2>Chỉnh sửa thông tin sản phẩm</h2>
                                                         <form action="/home?action=edit"  method="post">
-                                                            <label>ID:</label>
-                                                            <input type="text" class="form-control" name="id" value="${product.id}">
+
+                                                            <input type="hidden" class="form-control" name="id" value="${product.id}">
                                                             <label>Name</label>
                                                             <input type="text" class="form-control" name="name" value="${product.name}">
                                                             <label>Price</label>
@@ -220,7 +221,6 @@
                                                     <div class="container">
                                                         <h2>ARE YOU SURE?</h2>
                                                         <form method="post" action="/home?action=delete">
-                                                            <label>ID:</label>
                                                             <input type="hidden" class="form-control" name="id" value="${product.id}">
                                                             <label>Name</label>
                                                             <input type="text" class="form-control" name="name" value="${product.name}">
@@ -260,11 +260,14 @@
         </div>
     </div>
 </div>
-<footer>
+<footer style="background-color: burlywood">
     <hr>
     <div class="footer-copyright text-center py-3">© 2020 Copyright:
         <a href="#">khanh Nobi</a>
         HOTLINE:<a href="$">0345541750</a>
+        <a href="https://www.facebook.com/kodoi.love/"><img src="image/face.jpg" style="height: 50px ; width: 50px" alt=""></a>
+        <a href="https://www.youtube.com/"><img src="image/youtube.jpg" style="height: 50px ; width: 50px" alt=""></a>
+        <a href="https://codegym.vn/"><img src="image/codegym.jpg" style="height: 50px ; width: 50px" alt=""></a>
     </div>
 </footer>
 </body>

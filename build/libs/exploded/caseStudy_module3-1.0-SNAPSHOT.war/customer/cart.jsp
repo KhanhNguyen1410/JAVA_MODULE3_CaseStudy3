@@ -25,6 +25,7 @@
 <center>
 <body>
 <c:set var="customer" scope="session" value='${sessionScope.customer}'/>
+<c:set var="total"  value='${requestScope["totalAmount"]}'/>
 <p>
     Tên khách:  <strong><c:out value=" ${customer.getName()}"/></strong><br>
     Địa chỉ  :  <strong><c:out value=" ${customer.getAddress()}"/></strong><br>
@@ -49,7 +50,7 @@
         <tr><td>Tong</td>
             <td></td>
             <td></td>
-            <td></td>
+            <td>${total.getTotal()}</td>
         </tr>
     </table>
 

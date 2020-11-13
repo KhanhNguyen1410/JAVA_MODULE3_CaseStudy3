@@ -35,6 +35,8 @@
         <th>Pass</th>
         <th>Address</th>
         <th>Phone</th>
+        <th>Status</th>
+        <th>Action</th>
     </tr>
     <c:forEach items='${requestScope["customers"]}' var="customer">
         <tr>
@@ -43,7 +45,8 @@
             <td>${customer.pass}</td>
             <td>${customer.address}</td>
             <td>${customer.phone}</td>
-            <td><button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#exampleModalUpdate${customer.id}">Xóa</button>
+            <td>${customer.status}</td>
+            <td><button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#exampleModalUpdate${customer.id}">Disable</button>
                 <div class="modal fade" id="exampleModalUpdate${customer.id}" tabindex="-1" role="dialog"
                      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -53,7 +56,7 @@
                                     <h2>ARE YOU SURE?</h2>
                                     <form method="post" action="/customer?action=delete&id=${customer.id}">
                                         <label>ID:</label>
-                                        <input type="text" class="form-control" name="id" value="${customer.id}">
+                                        <input type="hidden" class="form-control" name="id" value="${customer.id}">
                                         <label>Name</label>
                                         <input type="text" class="form-control" name="name" value="${customer.name}">
                                         <label>Pass</label>
@@ -63,7 +66,38 @@
                                         <label>Phone</label>
                                         <input type="text" class="form-control" name="type" value="${customer.phone}">
                                         <div class="modal-footer">
-                                            <input type="submit" value="Xóa">
+                                            <input type="submit" value="Disable">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalUpdate${customer.name}">Able</button>
+                <div class="modal fade" id="exampleModalUpdate${customer.name}" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div class="container">
+                                    <h2>ARE YOU SURE?</h2>
+                                    <form method="post" action="/customer?action=able&id=${customer.id}">
+                                        <label>ID:</label>
+                                        <input type="hidden" class="form-control" name="id" value="${customer.id}">
+                                        <label>Name</label>
+                                        <input type="text" class="form-control" name="name" value="${customer.name}">
+                                        <label>Pass</label>
+                                        <input type="password" class="form-control" name="price" value="${customer.pass}">
+                                        <label>Address</label>
+                                        <input type="text" class="form-control" name="image" value="${customer.address}">
+                                        <label>Phone</label>
+                                        <input type="text" class="form-control" name="type" value="${customer.phone}">
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Able">
                                         </div>
                                     </form>
                                 </div>

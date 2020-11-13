@@ -2,6 +2,8 @@ package controller;
 
 import model.Bill;
 import model.Customer;
+import service.admin.AdminServiceIPL;
+import service.admin.MyAdminService;
 import service.bill.BillServiceIPL;
 import service.bill.MyBillService;
 import service.customer.CustomerServiceIPL;
@@ -21,6 +23,7 @@ import java.io.IOException;
 public class LoginServlet extends HttpServlet {
     MyCustomerService customerService = new CustomerServiceIPL();
     MyBillService billService = new BillServiceIPL();
+    MyAdminService adminService = new AdminServiceIPL();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         signInWithClient(request, response);
@@ -32,21 +35,24 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void signInWithClient(HttpServletRequest request, HttpServletResponse response) {
-        String customerName = request.getParameter("userName");
+        String signInName = request.getParameter("userName");
         String passWord = request.getParameter("password");
 
-        Customer customer = customerService.findCustomerByName(customerName);
-        boolean isValid = customerService.checkCustomer(customerName, passWord);
+//        Customer customerStatus = customerService.findCustomerByStatus(customerName);
+        Customer customer = customerService.findCustomerByName(signInName);
+        boolean isValid = customerService.checkCustomer(signInName, passWord);
         boolean billIsValid = billService.checkUnfinishedBill(customer.getId());
+        boolean customerIsValid = customerService.checkStatus(signInName);
+        boolean adminIsValid = adminService.checkAdmin(signInName,passWord);
         RequestDispatcher dispatcher;
         HttpSession session = request.getSession();
         session.setAttribute("customer", customer);
 
         try {
-            if (customerName.equals("admin") && (passWord.equals("admin"))) {
+            if (adminIsValid) {
                 dispatcher = request.getRequestDispatcher("/home?action=admin");
             }
-            else if (isValid) {
+            else if (isValid && customerIsValid) {
                 Bill bill = new Bill(customer);
                 if (!billIsValid){
                     billService.insert(bill);

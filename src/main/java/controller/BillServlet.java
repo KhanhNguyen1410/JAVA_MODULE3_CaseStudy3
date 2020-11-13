@@ -1,9 +1,6 @@
 package controller;
 
-import model.Bill;
-import model.Customer;
-import model.Orders;
-import model.Product;
+import model.*;
 import service.bill.BillServiceIPL;
 import service.bill.MyBillService;
 import service.customer.CustomerServiceIPL;
@@ -56,8 +53,14 @@ public class BillServlet extends HttpServlet {
             case "addToCart":
                 insertOrders(request,response);
                 break;
+            case "listBill":
+                showListBill(request,response);
+                break;
         }
     }
+
+
+
     private void insertBill(HttpServletRequest request, HttpServletResponse response) {
         int id = Integer.parseInt(request.getParameter("id"));
         String cus_name = request.getParameter("name");
@@ -77,13 +80,16 @@ public class BillServlet extends HttpServlet {
 //        int bill_id = Integer.parseInt(request.getParameter("bill_id"));
         int product_id = Integer.parseInt(request.getParameter("product_id"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
+        int STATUS = 0;
         Product product = productManagement.findById(product_id);
-        Bill bill = billService.findBillByCustomerId((Customer) request.getSession().getAttribute("customer"), 0);
+        Bill bill = billService.findBillByCustomerId((Customer) request.getSession().getAttribute("customer"), STATUS);
 //        Bill bill = billService.findBillByCustomerId(customer.getId(),0);
         Orders orders = new Orders(bill, product, quantity);
         ordersService.create(orders);
         List<Orders> ordersList = ordersService.showAllOrders(bill.getId());
         request.setAttribute("orders", ordersList);
+        TotalCart totalCart = ordersService.totalCart(product_id);
+        request.setAttribute("totalAmount", totalCart);
         RequestDispatcher dispatcher = request.getRequestDispatcher("customer/cart.jsp");
         try {
             dispatcher.forward(request, response);
@@ -99,6 +105,19 @@ public class BillServlet extends HttpServlet {
         billService.updateAfterAddToCart();
         try {
             dispatcher.forward(request,response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void showListBill(HttpServletRequest request, HttpServletResponse response) {
+        List<Bill> bills = billService.findAll();
+        request.setAttribute("bills", bills);
+        RequestDispatcher dispatcher;
+        try {
+            dispatcher = request.getRequestDispatcher("product/listBill.jsp");
+            dispatcher.forward(request, response);
         } catch (ServletException e) {
             e.printStackTrace();
         } catch (IOException e) {

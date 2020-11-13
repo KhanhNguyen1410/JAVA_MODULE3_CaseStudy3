@@ -1,9 +1,6 @@
 package service.bill;
 
-import model.Bill;
-import model.Brand;
-import model.Customer;
-import model.Product;
+import model.*;
 import service.customer.CustomerServiceIPL;
 import service.customer.MyCustomerService;
 import service.orders.MyOrdersService;
@@ -22,7 +19,8 @@ public class BillServiceIPL implements MyBillService {
     private String jdbcPassword = "MySQL1410";
 
     private MyCustomerService customerService = new CustomerServiceIPL();
-//    MyOrdersService ordersService = new OrdersServiceIPL();
+//    private MyOrdersService ordersService = new OrdersServiceIPL();
+    private MyProductManagement productManagement = new ProductManagementIPL();
 
     private static final String INSERT_BILL_SQL = "{call insertBill(?)}";
     private static final String FIND_BILL_BY_ID = "{call findBillById(?)}";
@@ -31,6 +29,9 @@ public class BillServiceIPL implements MyBillService {
     private static final String UPDATE_BILL_AFTER_ADD = "{call updateAfterAddToCart()}";
     private static final String UPDATE_BILL_AFTER_BUY = "{call updateAfterBuy()}";
     private static final String CHECK_UNFINISHED_BILL = "{call checkUnfinishedBill(?)}";
+    private static final String FIND_ALL_BILL = "{call findAllBill()}";
+    private  static final String FIND_BY_ID = "call findOrdersById(?)";
+
 //    private static final String FIND_ALL_BILL = "{call findAllBill()}";
 
     protected Connection getConnection() {
@@ -96,25 +97,28 @@ public class BillServiceIPL implements MyBillService {
 
     @Override
     public List<Bill> findAll() {
-//        Connection connection = getConnection();
-//        List<Bill> bills = new ArrayList<>();
-//        try {
-//            CallableStatement statement = connection.prepareCall(FIND_ALL_BILL);
-//            ResultSet rs = statement.executeQuery();
-//            while (rs.next()){
-//                int id = rs.getInt("id");
-//                int customer_id = rs.getInt("customer_id");
-//                Timestamp dayCreated = rs.getTimestamp("daycreated");
-//                String address = rs.getString("address");
-//                String phone = rs.getString("phone");
-//                int status = 0;
-//                bills.add(new Bill( id, name, pass, address, phone , status));
-//            }
-//            connection.close();
-//        } catch (SQLException exception) {
-//            exception.printStackTrace();
-//        }
-        return null;
+        Connection connection = getConnection();
+        List<Bill> bills = new ArrayList<>();
+        try {
+            CallableStatement statement = connection.prepareCall(FIND_ALL_BILL);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                int id = rs.getInt("id");
+                Timestamp dayCreated = rs.getTimestamp("daycreated");
+                int cus_id = rs.getInt("customer_id");
+                int pro_id = rs.getInt("product_id");
+                int orders_id = rs.getInt("bill_id");
+                int status = rs.getInt("status");
+                Customer customer = customerService.findById(cus_id);
+                Product product = productManagement.findById(pro_id);
+                Orders orders = findOrdersById(orders_id);
+                bills.add(new Bill(id,dayCreated,customer,product,orders,status));
+            }
+            connection.close();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return bills;
     }
 
     @Override
@@ -178,5 +182,29 @@ public class BillServiceIPL implements MyBillService {
         }
         return billIsValid;
     }
+
+    @Override
+    public Orders findOrdersById(int fBill_id) {
+        Connection connection = getConnection();
+        Orders orders = null;
+        try {
+            CallableStatement statement = connection.prepareCall(FIND_BY_ID);
+            statement.setInt(1,fBill_id);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                int bill_id = rs.getInt("bill_id");
+                int product_id = rs.getInt("product_id");
+                int quantity = rs.getInt("quantity");
+                Bill bill = findBillById(bill_id);
+                Product product = productManagement.findById(product_id);
+                orders = new Orders(bill,product,quantity);
+            }
+            connection.close();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return orders;
+    }
+
 
 }

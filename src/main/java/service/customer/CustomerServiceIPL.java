@@ -19,6 +19,12 @@ public class CustomerServiceIPL implements MyCustomerService {
     private static String CHECK_CUSTOMER = "{call checkUser(?,?)}";
     private static String CHECK_CUSTOMER_NAME = "{call checkUserName(?)}";
     private static final String DELETE_CUSTOMER_SQL = "{call deleteCustomer(?)}";
+    private static final String FORGOT_PASS = "{call forgotPass(?,?)}";
+    private static final String DISABLE_CUSTOMER = "{call disableCustomer(?)}";
+    private static final String ABLE_CUSTOMER = "{call ableCustomer(?)}";
+    private static final String CHECK_STATUS_CUSTOMER = "{call checkStatusCustomer(?,?)}";
+    private static final int STATUS_CUSTOMER_ABLE = 1;
+//    private static final String FIND_CUSTOMER_VY_STATUS = "{call checkStatusCustomer(?,?)}";
 
     protected Connection getConnection() {
         Connection connection = null;
@@ -124,6 +130,31 @@ public class CustomerServiceIPL implements MyCustomerService {
         return customer;
     }
 
+
+
+    @Override
+    public Customer forgotPass(String fName, String fPhone) {
+        Connection connection = getConnection();
+        Customer customer = null;
+        try {
+            CallableStatement statement = connection.prepareCall(FORGOT_PASS);
+            statement.setString(1,fName);
+            statement.setString(2,fPhone);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String pass = rs.getString("pass");
+                String address = rs.getString("address");
+                String phone = rs.getString("phone");
+                customer = new Customer(id,name,pass,address,phone);
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return customer;
+    }
+
     @Override
     public List<Customer> findAll() {
         Connection connection = getConnection();
@@ -137,7 +168,8 @@ public class CustomerServiceIPL implements MyCustomerService {
                 String pass = rs.getString("pass");
                 String address = rs.getString("address");
                 String phone = rs.getString("phone");
-                customers.add(new Customer( id, name, pass, address, phone));
+                int status = rs.getInt("status");
+                customers.add(new Customer( id, name, pass, address, phone,status));
             }
             connection.close();
         } catch (SQLException exception) {
@@ -169,12 +201,13 @@ public class CustomerServiceIPL implements MyCustomerService {
     }
 
     @Override
-    public boolean checkCustomerName(String userName) {
+    public boolean checkCustomerName(String userName, int status) {
         boolean isValid = false;
         Connection connection = getConnection();
         try {
             CallableStatement statement = connection.prepareCall(CHECK_CUSTOMER_NAME);
             statement.setString(1,userName);
+            statement.setInt(2,STATUS_CUSTOMER_ABLE);
             ResultSet rs =statement.executeQuery();
             if (rs.next()){
                 isValid = true;
@@ -187,5 +220,74 @@ public class CustomerServiceIPL implements MyCustomerService {
             exception.printStackTrace();
         }
         return isValid;
+    }
+
+    @Override
+    public boolean checkAccountCustomer(String fName, String fPhone) {
+        Connection connection = getConnection();
+        boolean isValid = false;
+        try {
+            CallableStatement statement = connection.prepareCall(FORGOT_PASS);
+            statement.setString(1,fName);
+            statement.setString(2,fPhone);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()){
+                isValid = true;
+            }
+            else {
+                isValid= false;
+            }
+            connection.close();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return isValid;
+    }
+
+    @Override
+    public boolean checkStatus(String userName) {
+        boolean isValid = false;
+        Connection connection = getConnection();
+        try {
+            CallableStatement statement = connection.prepareCall(CHECK_STATUS_CUSTOMER);
+            statement.setString(1,userName);
+            statement.setInt(2,STATUS_CUSTOMER_ABLE);
+            ResultSet rs =statement.executeQuery();
+            if (rs.next()){
+                isValid = true;
+            }
+            else {
+                isValid = false;
+            }
+            connection.close();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return isValid;
+    }
+
+    @Override
+    public void disableCustomer(int id) {
+        Connection connection = getConnection();
+        try {
+            CallableStatement statement = connection.prepareCall(DISABLE_CUSTOMER);
+            statement.setInt(1,id);
+            statement.executeUpdate();
+            connection.close();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    @Override
+    public void ableCustomer(int id) {
+        Connection connection = getConnection();
+        try {
+            CallableStatement statement = connection.prepareCall(ABLE_CUSTOMER);
+            statement.setInt(1,id);
+            statement.executeUpdate();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
     }
 }

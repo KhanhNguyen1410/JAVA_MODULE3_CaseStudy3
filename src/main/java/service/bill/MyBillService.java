@@ -2,6 +2,7 @@ package service.bill;
 
 import model.Bill;
 import model.Customer;
+import model.Orders;
 import model.Product;
 
 import java.util.List;
@@ -22,4 +23,7 @@ public interface MyBillService {
     Bill findBillByCustomerId(Customer cus_id, int status);
 
     boolean checkUnfinishedBill(int td);
+
+    Orders findOrdersById(int id);
+
 }

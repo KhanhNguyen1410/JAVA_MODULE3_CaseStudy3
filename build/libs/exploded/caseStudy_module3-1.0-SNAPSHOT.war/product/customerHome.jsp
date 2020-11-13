@@ -102,7 +102,7 @@
                                                         <img src="image/${product.image}.jpg" alt="image product">
                                                         <br>
                                                         <label>Số lượng</label>
-                                                        <input type="number" class="form-control" name="quantity">
+                                                        <input type="number" class="form-control" name="quantity" value="1">
                                                         <div class="modal-footer">
                                                             <input type="submit" value="Thêm vào giỏ">
                                                         </div>
@@ -124,11 +124,14 @@
         </div>
     </div>
 </div>
-<footer>
+<footer style="background-color: burlywood">
     <hr>
     <div class="footer-copyright text-center py-3">© 2020 Copyright:
         <a href="#">khanh Nobi</a>
         HOTLINE:<a href="$">0345541750</a>
+        <a href="https://www.facebook.com/kodoi.love/"><img src="image/face.jpg" style="height: 50px ; width: 50px" alt=""></a>
+        <a href="https://www.youtube.com/"><img src="image/youtube.jpg" style="height: 50px ; width: 50px" alt=""></a>
+        <a href="https://codegym.vn/"><img src="image/codegym.jpg" style="height: 50px ; width: 50px" alt=""></a>
     </div>
 </footer>
 </body>
